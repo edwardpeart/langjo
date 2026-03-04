@@ -1,16 +1,16 @@
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Header, Footer, TabbedContent, TabPane
+from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea
 from .ui.file_tree import FileTreePanel
 from .ui.stats_panel import StatsPanel
 from .ui.editor import Editor
 from .ui.history import History
+from .logic.journal import save_entry
 
 
 
 class LangjoApp(App):
     BINDINGS = [
-        ("ctrl+n", "new_entry", "New entry"),
         ("ctrl+s", "save_entry", "Save entry")
     ]
     TITLE = "LANGJO"
@@ -21,7 +21,7 @@ class LangjoApp(App):
         yield Header("Langjo")
         
         with Horizontal(id="main"):
-            yield FileTreePanel(id="file-tree", path="journal")
+            yield FileTreePanel(id="file-tree", path="./data/entries")
 
             with Vertical(id="right-pane"):
                 
@@ -34,4 +34,12 @@ class LangjoApp(App):
                 yield StatsPanel("Stats will go here", id="stats")
         
         yield Footer()
+
+    def action_save_entry(self) -> None:
+        editor = self.query_one("#editor", TextArea)
+        content = editor.text
+        save_entry(content)
+
+        tree = self.query_one(FileTreePanel)
+        tree.reload()
 
