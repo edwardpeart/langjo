@@ -1,6 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.containers import Horizontal, Vertical
-from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea
+from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea, DirectoryTree, Markdown
+from pathlib import Path
 from .ui.file_tree import FileTreePanel
 from .ui.stats_panel import StatsPanel
 from .ui.editor import Editor
@@ -29,7 +30,7 @@ class LangjoApp(App):
                     with TabPane("New Entry", id="tab-new"):
                         yield Editor("", id="editor")
                     with TabPane("History", id="tab-history"):
-                        yield History("previous entries will be displayed here", id="history-view")
+                        yield History("", id="history-view")
             
                 yield StatsPanel("Stats will go here", id="stats")
         
@@ -43,3 +44,19 @@ class LangjoApp(App):
         tree = self.query_one(FileTreePanel)
         tree.reload()
 
+
+    def on_directory_tree_file_selected(
+        self, event: DirectoryTree.FileSelected
+    ) -> None:
+        file_path: Path = event.path
+
+        # Only handle files (ignore directories)
+        if file_path.is_file():
+            with open(file_path, "r", encoding="utf-8") as f:
+                content = f.read()
+
+            history_widget = self.query_one("#history-view", Markdown)
+            history_widget.update(content)
+
+            tabs = self.query_one("#editor-tabs", TabbedContent)
+            tabs.active = "tab-history"

@@ -1,4 +1,4 @@
-from textual.widgets import Static
+from textual.widgets import Markdown
 
-class History(Static):
+class History(Markdown):
     pass
