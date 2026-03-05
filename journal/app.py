@@ -6,11 +6,15 @@ from .ui.file_tree import FileTreePanel
 from .ui.stats_panel import StatsPanel
 from .ui.editor import Editor
 from .ui.history import History
-from .logic.journal import save_entry
+from .logic.journal_logic import JournalService
 
 
 
 class LangjoApp(App):
+    def __init__(self):
+        super().__init__()
+        self.journal_logic = JournalService()
+    
     BINDINGS = [
         ("ctrl+s", "save_entry", "Save entry")
     ]
@@ -39,7 +43,7 @@ class LangjoApp(App):
     def action_save_entry(self) -> None:
         editor = self.query_one("#editor", TextArea)
         content = editor.text
-        save_entry(content)
+        self.journal_logic.save_entry(content)
 
         tree = self.query_one(FileTreePanel)
         tree.reload()
@@ -47,16 +51,13 @@ class LangjoApp(App):
 
     def on_directory_tree_file_selected(
         self, event: DirectoryTree.FileSelected
-    ) -> None:
+        ) -> None:
         file_path: Path = event.path
 
-        # Only handle files (ignore directories)
-        if file_path.is_file():
-            with open(file_path, "r", encoding="utf-8") as f:
-                content = f.read()
+        content = self.journal_logic.read_entry(file_path)
 
-            history_widget = self.query_one("#history-view", Markdown)
-            history_widget.update(content)
+        history_widget = self.query_one("#history-view", Markdown)
+        history_widget.update(content)
 
-            tabs = self.query_one("#editor-tabs", TabbedContent)
-            tabs.active = "tab-history"
+        tabs = self.query_one("#editor-tabs", TabbedContent)
+        tabs.active = "tab-history"
