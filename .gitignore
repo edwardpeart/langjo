@@ -1,3 +1,9 @@
+# Ignore all journal entries
+data/entries/*
+
+# But keep the directory itself
+!data/entries/.gitkeep
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
