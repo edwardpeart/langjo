@@ -1,8 +1,10 @@
 # Ignore all journal entries
 data/entries/*
+data/vocab/*
 
 # But keep the directory itself
 !data/entries/.gitkeep
+!data/vocab/.gitkeep
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
