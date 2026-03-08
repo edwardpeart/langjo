@@ -7,6 +7,7 @@ from .ui.stats_panel import StatsPanel
 from .ui.editor import Editor
 from .ui.history import History
 from .logic.journal_logic import JournalService
+from .logic.vocab_logic import VocabLogic
 
 
 
@@ -14,6 +15,7 @@ class LangjoApp(App):
     def __init__(self):
         super().__init__()
         self.journal_logic = JournalService()
+        self.vocab_logic = VocabLogic()
     
     BINDINGS = [
         ("ctrl+s", "save_entry", "Save entry")
@@ -44,6 +46,8 @@ class LangjoApp(App):
         editor = self.query_one("#editor", TextArea)
         content = editor.text
         self.journal_logic.save_entry(content)
+
+        self.vocab_logic.add_from_text(content)
 
         tree = self.query_one(FileTreePanel)
         tree.reload()
