@@ -26,31 +26,37 @@ class LangjoApp(App):
 
     def compose(self) -> ComposeResult:
         yield Header("Langjo")
-        
-        with Horizontal(id="main"):
-            yield FileTreePanel(id="file-tree", path="./data/entries")
 
+        with Horizontal(id="main"):
+
+            # LEFT PANE
+            with Vertical(id="left-pane"):
+                yield FileTreePanel(id="file-tree", path="./data/entries")
+                yield StatsPanel(id="stats")
+
+            # RIGHT PANE
             with Vertical(id="right-pane"):
-                
                 with TabbedContent(id="editor-tabs"):
                     with TabPane("New Entry", id="tab-new"):
                         yield Editor("", id="editor")
+
                     with TabPane("History", id="tab-history"):
                         yield History("", id="history-view")
-            
-                yield StatsPanel("Stats will go here", id="stats")
-        
+
         yield Footer()
 
     def action_save_entry(self) -> None:
         editor = self.query_one("#editor", TextArea)
         content = editor.text
+        count = self.vocab_logic.count_words()
         self.journal_logic.save_entry(content)
 
         self.vocab_logic.add_from_text(content)
 
         tree = self.query_one(FileTreePanel)
+        stats = self.query_one(StatsPanel)
         tree.reload()
+        stats.update_stats(count)
 
 
     def on_directory_tree_file_selected(

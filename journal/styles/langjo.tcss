@@ -3,17 +3,26 @@
     height: 1fr;
 }
 
-/* Left panel */
-#file-tree {
+/* Left side */
+#left-pane {
     width: 30%;
+}
+
+#file-tree {
     height: 1fr;
     border: round $foreground;
     padding: 1;
 }
 
-/* Right side fills remaining width */
+/* Stats fixed height */
+#stats {
+    height: 10;
+    border: round $foreground;
+}
+
+/* Right side */
 #right-pane {
-    width: 1fr;
+    width: 70%;
     height: 1fr;
     layout: vertical;
 }
@@ -39,9 +48,15 @@
     content-align: center middle;
 }
 
-/* Stats fixed height */
-#stats {
-    height: 8;
-    border: round $foreground;
+StatsPanel {
+    background: $surface;
+    border: tall $primary;
     padding: 1;
+}
+
+.stat-line {
+    width: 100%;
+    padding: 0 1;
+    margin-bottom: 1;
+    color: $text;
 }
