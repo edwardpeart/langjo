@@ -9,7 +9,7 @@ class VocabRepository:
     def add(self, word):
         with open(VOCAB_FILE, "r+", encoding="utf-8") as file:
             file_data = json.load(file)
-            if word not in file_data:
+            if word not in file_data["vocab"]:
                 file_data["vocab"].append(word)
                 
             file.seek(0)

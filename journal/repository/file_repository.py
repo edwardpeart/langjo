@@ -25,3 +25,6 @@ class FileRepository:
         
         with open(file_path, "r", encoding="utf-8") as f:
             return f.read()
+        
+    def count(self):
+        return len(list(ENTRIES_DIR.glob("**/*.md")))

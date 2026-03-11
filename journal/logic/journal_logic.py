@@ -11,3 +11,6 @@ class JournalService:
     
     def read_entry(self, path: Path):
         return self.repo.read(path)
+    
+    def count_entries(self):
+        return self.repo.count()

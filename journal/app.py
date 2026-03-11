@@ -24,6 +24,13 @@ class LangjoApp(App):
     CSS_PATH = "styles/langjo.tcss"
     THEME = "textual-dark"
 
+    def on_mount(self) -> None:
+        initial_entries = self.journal_logic.count_entries()
+        initial_vocab = self.vocab_logic.count_words()
+
+        stats = self.query_one(StatsPanel)
+        stats.update_stats(initial_vocab, initial_entries)
+
     def compose(self) -> ComposeResult:
         yield Header("Langjo")
 
@@ -48,15 +55,19 @@ class LangjoApp(App):
     def action_save_entry(self) -> None:
         editor = self.query_one("#editor", TextArea)
         content = editor.text
-        count = self.vocab_logic.count_words()
+        
         self.journal_logic.save_entry(content)
 
         self.vocab_logic.add_from_text(content)
 
+        vocab_count = self.vocab_logic.count_words()
+        entry_count = self.journal_logic.count_entries()
+
         tree = self.query_one(FileTreePanel)
-        stats = self.query_one(StatsPanel)
         tree.reload()
-        stats.update_stats(count)
+        
+        stats = self.query_one(StatsPanel)
+        stats.update_stats(vocab_count, entry_count)
 
 
     def on_directory_tree_file_selected(
