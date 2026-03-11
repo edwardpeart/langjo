@@ -1,5 +1,5 @@
 from config import ENTRIES_DIR
-from datetime import datetime
+from datetime import datetime, timedelta
 from pathlib import Path
 
 class FileRepository:
@@ -28,3 +28,20 @@ class FileRepository:
         
     def count(self):
         return len(list(ENTRIES_DIR.glob("**/*.md")))
+    
+    def streak(self):
+        entries = list(ENTRIES_DIR.glob("**/*.md"))
+        date_set = set()
+        for entry in entries:
+            entry_date = entry.stem
+            date_set.add(datetime.strptime(entry_date, "%Y-%m-%d").date())
+        
+        delta = timedelta(days=1)
+        current_day = datetime.now().date() - delta
+        streak = 0
+       
+        while  current_day in date_set:
+            streak += 1
+            current_day -= delta
+
+        return streak

@@ -27,9 +27,10 @@ class LangjoApp(App):
     def on_mount(self) -> None:
         initial_entries = self.journal_logic.count_entries()
         initial_vocab = self.vocab_logic.count_words()
+        current_streak = self.journal_logic.current_streak()
 
         stats = self.query_one(StatsPanel)
-        stats.update_stats(initial_vocab, initial_entries)
+        stats.update_stats(initial_vocab, initial_entries, current_streak)
 
     def compose(self) -> ComposeResult:
         yield Header("Langjo")
@@ -62,12 +63,13 @@ class LangjoApp(App):
 
         vocab_count = self.vocab_logic.count_words()
         entry_count = self.journal_logic.count_entries()
+        current_streak = self.journal_logic.current_streak()
 
         tree = self.query_one(FileTreePanel)
         tree.reload()
         
         stats = self.query_one(StatsPanel)
-        stats.update_stats(vocab_count, entry_count)
+        stats.update_stats(vocab_count, entry_count, current_streak)
 
         self.notify("Entry saved!", severity="information")
         editor.text = ""

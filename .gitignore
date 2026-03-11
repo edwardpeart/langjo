@@ -1,6 +1,7 @@
 # Ignore all journal entries
 data/entries/*
 data/vocab/*
+tests/
 
 # But keep the directory itself
 !data/entries/.gitkeep

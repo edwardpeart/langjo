@@ -14,3 +14,6 @@ class JournalService:
     
     def count_entries(self):
         return self.repo.count()
+    
+    def current_streak(self):
+        return self.repo.streak()
