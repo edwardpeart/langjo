@@ -12,10 +12,10 @@ class FileRepository:
         entry_dir = ENTRIES_DIR / year / month
         entry_dir.mkdir(parents=True, exist_ok=True)
         file_path = entry_dir / filename
-
-
-        with open(file_path, "w", encoding="utf-8") as f:
-            f.write(text)
+        mode = "a" if file_path.exists() else "w"
+        
+        with open(file_path, mode, encoding="utf-8") as f:
+            f.write(f"\n{text}\n\n")
 
         return file_path
     

@@ -69,6 +69,9 @@ class LangjoApp(App):
         stats = self.query_one(StatsPanel)
         stats.update_stats(vocab_count, entry_count)
 
+        self.notify("Entry saved!", severity="information")
+        editor.text = ""
+
 
     def on_directory_tree_file_selected(
         self, event: DirectoryTree.FileSelected
