@@ -1,3 +1,7 @@
+HeaderClock {
+    display: none;
+}
+
 /* Main content area fills between header and footer */
 #main {
     height: 1fr;

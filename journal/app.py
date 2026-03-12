@@ -18,7 +18,7 @@ class LangjoApp(App):
         self.vocab_logic = VocabLogic()
     
     BINDINGS = [
-        ("ctrl+s", "save_entry", "Save entry")
+        ("ctrl+s", "save_entry", "Save Entry"),
     ]
     TITLE = "LANGJO"
     CSS_PATH = "styles/langjo.tcss"
