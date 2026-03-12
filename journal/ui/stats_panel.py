@@ -1,6 +1,7 @@
 from textual.app import ComposeResult
 from textual.widgets import Static, Label
 from textual.containers import Vertical
+from ..config import DEMO_MODE
 
 class StatsPanel(Static):
     BORDER_TITLE = "Stats"
@@ -14,6 +15,12 @@ class StatsPanel(Static):
             yield Label("Current Streak: 0", id="stat-streak", classes="stat-line")
 
     def update_stats(self, vocab_count, entry_count, current_streak):
+        if DEMO_MODE:
+            self.query_one("#stat-vocab").update("Vocabulary: [b]423 words[/b]")
+            self.query_one("#stat-entries").update("Total Entries: [b]81[/b]")
+            self.query_one("#stat-streak").update("Current Streak: [b]19 days[/b]")
+            return
+        
         """Update the combined text of each label."""
         self.query_one("#stat-vocab").update(f"Vocabulary: [b]{vocab_count} words[/b]")
         self.query_one("#stat-entries").update(f"Total Entries: [b]{entry_count}[/b]")

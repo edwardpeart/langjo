@@ -2,6 +2,10 @@
 
 A terminal-based journaling tool for language learning built with [Textual](https://textual.textualize.io/)
 
+<p align="center">
+  <img src="assets/langjo_demo.gif" width="900">
+</p>
+
 *Supported Journaling languages*
 - Japanese
 
@@ -13,7 +17,7 @@ Journaling is a powerful language learning tool that offers a low-stakes environ
 - **Multiple Daily Entries:** Further entries are appended to that day's markdown file.
 - **Entries Automatically Organised:** Entries are saved in a local directory tree in 'YEAR/MONTH/YYYY-MM-DD.md' format.
 - **Vocab Tracking:** Journal entries are parsed and noramilzed into their dictionary form with [Sudachipy](https://pypi.org/project/SudachiPy/0.4.3/), new vocabulary is then saved to a vocab list.
-- **History Browser:** Previous entries can be selcted via the file tree and viewed to track output improvement over time.
+- **History Browser:** Previous entries can be selected via the file tree and viewed to track output improvement over time.
 - **Streak Tracking:** Daily entry streak is tracked and displayed.
 - **Live stats:** View your total vocabulary, entry count and streak.
 
