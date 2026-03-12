@@ -1,0 +1,15 @@
+[project]
+name = "langjo"
+version = "0.1.0"
+description = "CLI journaling tool for language learning"
+dependencies = [
+    "textual",
+    "sudachipy",
+    "sudachidict_core"
+]
+
+[project.scripts]
+langjo = "journal.main:main"
+
+[tool.setuptools]
+packages = ["journal"]

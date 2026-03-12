@@ -1,4 +1,4 @@
-from config import VOCAB_FILE
+from journal.config import VOCAB_FILE
 import json
 
 class VocabRepository:
