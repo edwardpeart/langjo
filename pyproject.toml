@@ -5,7 +5,9 @@ description = "CLI journaling tool for language learning"
 dependencies = [
     "textual",
     "sudachipy",
-    "sudachidict_core"
+    "sudachidict_core",
+    "PostgreSQL",
+    "SQLAlchemy",
 ]
 
 [project.scripts]
