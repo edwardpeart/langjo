@@ -2,6 +2,7 @@
 data/entries/*
 data/vocab/*
 tests/
+.github
 
 # But keep the directory itself
 !data/entries/.gitkeep

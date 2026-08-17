@@ -7,7 +7,7 @@ class Entry(Base):
     __tablename__ = "entries"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    body: Mapped[str] = mapped_column(String)
+    body: Mapped[str] = mapped_column(String, nullable=False)
     vocab: Mapped[List["Vocab"]] = relationship(
         back_populates="entry", cascade="all, delete-orphan"
     )
@@ -34,7 +34,8 @@ class Vocab(Base):
     entry: Mapped["Entry"] = relationship(back_populates="vocab")
     created_at: Mapped[DateTime] = mapped_column(
             DateTime(timezone=True),
-            server_default=func.now()
+            server_default=func.now(),
+            nullable=False
             )
 
     def __repr__(self):

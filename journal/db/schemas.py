@@ -1,21 +1,30 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
+from datetime import datetime
 
-class JournalEntryBase(BaseModel):
+class EntryBase(BaseModel):
     body: str
 
-class JournalEntryCreate(JournalEntryBase):
+class EntryCreate(EntryBase):
     pass
 
-class JournalEntryUpdate(JournalEntryBase):
-    pass
+class EntryUpdate(BaseModel):
+    body: str | None = None
 
-class JournalEntryInDBBase(JournalEntryBase):
+class EntryRead(EntryBase):
     id: int
-    created_at: str
-    updated_at: str
+    created_at: datetime
+    updated_at: datetime
+    model_config = ConfigDict(from_attributes=True)
 
-    class Config:
-        orm_mode = True
+class VocabBase(BaseModel):
+    dict_form: str
+    reading: str
 
-class JournalEntry(JournalEntryInDBBase):
+class VocabCreate(VocabBase):
     pass
+
+class VocabRead(VocabBase):
+    id: int
+    entry_id: int
+    created_at: datetime
+    model_config = ConfigDict(from_attributes=True)

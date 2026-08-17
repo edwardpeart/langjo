@@ -2,7 +2,7 @@
 from pathlib import Path
 from ..repository.file_repository import FileRepository
 
-class JournalService:
+class JournalLogic:
     def __init__(self):
         self.repo = FileRepository()
    
