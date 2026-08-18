@@ -1,3 +1,7 @@
+from sqlalchemy.orm import Session
+
+from ..db.database import SessionLocal
+
 from ..db.repositories.stats_repo import StatsRepository
 
 class StatsService:
@@ -5,7 +9,11 @@ class StatsService:
         self.repo = StatsRepository()
 
     def get_streak(self) -> int:
-        entries = self.repo.get_entries_date_desc()
+        db: Session = SessionLocal()
+        try:
+            entries = self.repo.get_entries_date_desc(db)
+        finally:
+            db.close()
 
         if not entries:
                 return 0
@@ -21,8 +29,16 @@ class StatsService:
         return streak
 
     def get_entry_count(self) -> int:
-       return self.repo.get_entry_count()
+        db: Session = SessionLocal()
+        try:
+            return self.repo.get_entry_count(db)
+        finally:  
+            db.close()
 
     def get_word_count(self) -> int:
-        return self.repo.get_vocab_count()
+        db: Session = SessionLocal()
+        try:
+            return self.repo.get_vocab_count(db)
+        finally:  
+            db.close()
     

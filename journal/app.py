@@ -1,4 +1,5 @@
 from textual.app import App, ComposeResult
+from .db.database import init_db
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea, DirectoryTree, Markdown
 from pathlib import Path
@@ -6,16 +7,18 @@ from .ui.file_tree import FileTreePanel
 from .ui.stats_panel import StatsPanel
 from .ui.editor import Editor
 from .ui.history import History
-from .logic.journal_logic import JournalService
-from .logic.vocab_logic import VocabLogic
-
-
+from .services.journal_service import JournalService
+from .services.vocab_service import VocabService
+from .services.stats_service import StatsService
 
 class LangjoApp(App):
     def __init__(self):
         super().__init__()
-        self.journal_logic = JournalService()
-        self.vocab_logic = VocabLogic()
+        init_db()
+        self.journal_service = JournalService()
+        self.vocab_service = VocabService()
+        self.stats_service = StatsService()
+
     
     BINDINGS = [
         ("ctrl+s", "save_entry", "Save Entry")
@@ -25,9 +28,9 @@ class LangjoApp(App):
     THEME = "textual-dark"
 
     def on_mount(self) -> None:
-        initial_entries = self.journal_logic.count_entries()
-        initial_vocab = self.vocab_logic.count_words()
-        current_streak = self.journal_logic.current_streak()
+        initial_entries = self.stats_service.get_entry_count()
+        initial_vocab = self.stats_service.get_word_count()
+        current_streak = self.stats_service.get_streak()
 
         stats = self.query_one(StatsPanel)
         stats.update_stats(initial_vocab, initial_entries, current_streak)
@@ -39,7 +42,7 @@ class LangjoApp(App):
 
             # LEFT PANE
             with Vertical(id="left-pane"):
-                yield FileTreePanel(id="file-tree", path="./data/entries")
+                #yield FileTreePanel(id="file-tree", path="./data/entries")
                 yield StatsPanel(id="stats")
 
             # RIGHT PANE
@@ -56,17 +59,16 @@ class LangjoApp(App):
     def action_save_entry(self) -> None:
         editor = self.query_one("#editor", TextArea)
         content = editor.text
-        
-        self.journal_logic.save_entry(content)
 
-        self.vocab_logic.add_from_text(content)
+        entry = self.journal_service.save(content)
+        self.vocab_service.add(content, entry_id=entry.id)
 
-        vocab_count = self.vocab_logic.count_words()
-        entry_count = self.journal_logic.count_entries()
-        current_streak = self.journal_logic.current_streak()
+        vocab_count = self.stats_service.get_word_count()
+        entry_count = self.stats_service.get_entry_count()
+        current_streak = self.stats_service.get_streak()
 
-        tree = self.query_one(FileTreePanel)
-        tree.reload()
+        #tree = self.query_one(FileTreePanel)
+        #tree.reload()
         
         stats = self.query_one(StatsPanel)
         stats.update_stats(vocab_count, entry_count, current_streak)
@@ -74,7 +76,7 @@ class LangjoApp(App):
         self.notify("Entry saved!", severity="information")
         editor.text = ""
 
-
+    """
     def on_directory_tree_file_selected(
         self, event: DirectoryTree.FileSelected
         ) -> None:
@@ -87,3 +89,4 @@ class LangjoApp(App):
 
         tabs = self.query_one("#editor-tabs", TabbedContent)
         tabs.active = "tab-history"
+    """

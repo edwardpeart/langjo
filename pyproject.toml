@@ -6,8 +6,9 @@ dependencies = [
     "textual",
     "sudachipy",
     "sudachidict_core",
-    "PostgreSQL",
+    "psycopg2-binary",
     "SQLAlchemy",
+    "python-dotenv",
 ]
 
 [project.scripts]

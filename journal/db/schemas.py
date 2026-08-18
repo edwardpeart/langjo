@@ -19,12 +19,13 @@ class EntryRead(EntryBase):
 class VocabBase(BaseModel):
     dict_form: str
     reading: str
+    entry_id: int | None = None
 
 class VocabCreate(VocabBase):
     pass
 
 class VocabRead(VocabBase):
     id: int
-    entry_id: int
+    entry_id: int | None = None
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
