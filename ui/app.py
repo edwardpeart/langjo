@@ -1,15 +1,15 @@
 from textual.app import App, ComposeResult
-from .db.database import init_db
+from ..journal.db.database import init_db
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea, Tree
 from pathlib import Path
-from .ui.entry_tree import EntryTreePanel
-from .ui.stats_panel import StatsPanel
-from .ui.editor import Editor
-from .ui.history import History
-from .services.journal_service import JournalService
-from .services.vocab_service import VocabService
-from .services.stats_service import StatsService
+from .entry_tree import EntryTreePanel
+from .stats_panel import StatsPanel
+from .editor import Editor
+from .history import History
+from ..journal.services.journal_service import JournalService
+from ..journal.services.vocab_service import VocabService
+from ..journal.services.stats_service import StatsService
 
 class LangjoApp(App):
     def __init__(self):
@@ -94,9 +94,6 @@ class LangjoApp(App):
 
         history_widget = self.query_one("#history-view", History)
         history_widget.update(entry.body)
-
-        editor = self.query_one("#editor", TextArea)
-        editor.load_text(entry.body)
 
         tabs = self.query_one("#editor-tabs", TabbedContent)
         tabs.active = "tab-history"

@@ -18,6 +18,7 @@ class VocabService:
         try:
             created = []
             for word in words:
+                
                 payload = VocabCreate(**word, entry_id=entry_id)
                 created.append(self.repo.add_vocab(db, payload))
             return created

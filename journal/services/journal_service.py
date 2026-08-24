@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from journal.db import models
+from journal.db.models import entry_model
 
 from ..db.database import SessionLocal
 from ..db.repositories.entry_repo import EntryRepository
@@ -20,9 +20,9 @@ class JournalService:
             today = date.today()
 
             existing = (
-                db.query(models.Entry)
-                .filter(func.date(models.Entry.created_at) == today.isoformat())
-                .order_by(models.Entry.created_at.desc())
+                db.query(entry_model.Entry)
+                .filter(func.date(entry_model.Entry.created_at) == today.isoformat())
+                .order_by(entry_model.Entry.created_at.desc())
                 .first()
             )
 

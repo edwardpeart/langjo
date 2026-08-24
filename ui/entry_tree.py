@@ -1,8 +1,8 @@
 from textual.widgets import Tree
 from sqlalchemy.orm import Session
 
-from ..db.database import SessionLocal
-from ..db.repositories.entry_repo import EntryRepository
+from ..journal.db.database import SessionLocal
+from ..journal.db.repositories.entry_repo import EntryRepository
 
 
 class EntryTreePanel(Tree):
