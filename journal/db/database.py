@@ -11,7 +11,7 @@ DB_URL = os.getenv(
     "postgresql+psycopg2://postgres:postgres@localhost:5432/langjo",
 )
 
-engine = create_engine(DB_URL, echo=True)
+engine = create_engine(DB_URL, echo=False)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 
@@ -27,10 +27,6 @@ def get_db():
 def init_db():
     from .models import Entry, Vocab  # noqa: F401
 
-    Base.metadata.drop_all(bind=engine)
     Base.metadata.create_all(bind=engine)
-
-
-init_db()
 
 

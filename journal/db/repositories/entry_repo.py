@@ -15,7 +15,8 @@ class EntryRepository:
         entry = db.query(models.Entry).filter(models.Entry.id == entry_id).first()
         if entry:
             if item.body is not None:
-                entry.body += item.body
+                separator = "\n\n" if entry.body and not entry.body.endswith("\n") else ""
+                entry.body = f"{entry.body}{separator}{item.body}".strip()
             db.commit()
             db.refresh(entry)
         return entry
@@ -23,3 +24,5 @@ class EntryRepository:
     def get_entry(self, db: Session, entry_id: int):
         return db.query(models.Entry).filter(models.Entry.id == entry_id).first()
 
+    def get_entries_date_desc(self, db: Session):
+        return db.query(models.Entry).order_by(models.Entry.created_at.desc()).all()

@@ -1,4 +1,9 @@
+from datetime import date
+
+from sqlalchemy import func
 from sqlalchemy.orm import Session
+
+from journal.db import models
 
 from ..db.database import SessionLocal
 from ..db.repositories.entry_repo import EntryRepository
@@ -10,8 +15,23 @@ class JournalService:
         self.repo = EntryRepository()
 
     def save(self, text: str):
-        db: Session = SessionLocal()
+        db = SessionLocal()
         try:
+            today = date.today()
+
+            existing = (
+                db.query(models.Entry)
+                .filter(func.date(models.Entry.created_at) == today.isoformat())
+                .order_by(models.Entry.created_at.desc())
+                .first()
+            )
+
+            if existing:
+                existing.body = f"{existing.body}\n\n{text}".strip()
+                db.commit()
+                db.refresh(existing)
+                return existing
+
             return self.repo.create_entry(db, EntryCreate(body=text))
         finally:
             db.close()
@@ -23,9 +43,16 @@ class JournalService:
         finally:
             db.close()
 
-    def get(self, entry_id: int):
+    def get_entry(self, entry_id: int):
         db: Session = SessionLocal()
         try:
             return self.repo.get_entry(db, entry_id)
+        finally:
+            db.close()
+
+    def get_all_entries(self):
+        db: Session = SessionLocal()
+        try:
+            return self.repo.get_entries_date_desc(db)
         finally:
             db.close()
