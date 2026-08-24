@@ -1,7 +1,7 @@
 from textual.app import ComposeResult
 from textual.widgets import Static, Label
 from textual.containers import Vertical
-from ..journal.config import DEMO_MODE
+from ..config import DEMO_MODE
 
 class StatsPanel(Static):
     BORDER_TITLE = "Stats"

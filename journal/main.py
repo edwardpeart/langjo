@@ -1,4 +1,4 @@
-from ..ui.app import LangjoApp
+from journal.ui.app import LangjoApp
 
 def main():
     app = LangjoApp()

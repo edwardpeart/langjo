@@ -13,3 +13,4 @@ class Config:
 
 
 config = Config()
+DEMO_MODE = config.DEMO_MODE
