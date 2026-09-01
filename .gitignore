@@ -3,6 +3,7 @@ data/entries/*
 data/vocab/*
 tests/
 .github
+journal/db/migrations/alembic/versions/*
 
 # But keep the directory itself
 !data/entries/.gitkeep

@@ -10,10 +10,11 @@ dependencies = [
     "SQLAlchemy",
     "python-dotenv",
     "alembic",
+    "fastapi[standard]",
 ]
 
 [project.scripts]
-langjo = "journal.main:main"
+langjo = "journal.ui.main:main"
 
 [tool.setuptools]
 packages = ["journal", "journal.ui"]
