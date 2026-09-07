@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy import DateTime, ForeignKey, String, UniqueConstraint, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy.ext.hybrid import hybrid_property
 
 from ..database import Base
 
@@ -16,17 +17,21 @@ class Vocab(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     dict_form: Mapped[str] = mapped_column(String, nullable=False)
-    reading: Mapped[str] = mapped_column(String)
-    entry_id: Mapped[int | None] = mapped_column(
+    reading: Mapped[str] = mapped_column(String, nullable=False)
+    entry_id: Mapped[int] = mapped_column(
         ForeignKey("entries.id"),
-        nullable=True,
+        nullable=False,
     )
-    entry: Mapped["Entry | None"] = relationship(back_populates="vocab")
+    entry: Mapped["Entry"] = relationship(back_populates="vocab")
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
         nullable=False,
     )
+
+    @hybrid_property
+    def sort_key(self):
+        return self.reading
 
     __table_args__ = (
         UniqueConstraint("dict_form", "reading", name="uq_dict_form_reading"),
