@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status, APIRouter
-from journal.db.schemas import EntryRead, EntryCreate, EntryUpdate
+from journal.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate
 from journal.services.journal_service import JournalService
 from journal.services.parsing.japanese_parser import JapaneseParser
 
@@ -37,18 +37,19 @@ def get_entry(entry_id: int):
 
 @router.post(
     "",
-    response_model=EntryCreate,
+    response_model=EntryCreateResponse,
     status_code=status.HTTP_200_OK,
-    summary="Save new entry",)
+    summary="Save new entry",
+)
 def create_entry(body: str):
-    service = JournalService()
-    new_entry = service.save_entry(None, body)
-    if not body:
+    if not body.strip():
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Entry cannot be empty",
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Entry cannot be empty",
         )
-    return new_entry
+
+    service = JournalService()
+    return service.save_entry(None, body)
 
 @router.put(
     "{entry_id}",

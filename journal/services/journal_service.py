@@ -3,8 +3,8 @@ from datetime import date
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from journal.db.models import entry_model
 from journal.services.vocab_service import VocabService
+from ..db.schemas import EntryCreateResponse
 
 from ..db.database import SessionLocal
 from ..db.repositories.entry_repo import EntryRepository
@@ -23,8 +23,10 @@ class JournalService:
                 entry = self.entry_repo.update_entry(db, entry_id, EntryUpdate(body=text))
             else:
                 entry = self.entry_repo.create_entry(db, EntryCreate(body=text))
-            self.vocab_service.add(text, entry.id)
-            return entry
+            created = self.vocab_service.add(text, entry_id=entry.id)
+            return EntryCreateResponse(
+                entry=entry, new_words_added=len(created)
+            )
         finally:
             db.close()
 

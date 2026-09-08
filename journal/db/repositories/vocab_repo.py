@@ -17,7 +17,7 @@ class VocabRepository:
             .first()
         )
         if existing:
-            return existing
+            return None
 
         vocab = vocab_model.Vocab(
             dict_form=item.dict_form,

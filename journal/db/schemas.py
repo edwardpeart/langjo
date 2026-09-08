@@ -16,6 +16,10 @@ class EntryRead(EntryBase):
     updated_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
+class EntryCreateResponse(BaseModel):
+    entry: EntryRead
+    new_words_added: int
+
 class VocabBase(BaseModel):
     dict_form: str
     reading: str

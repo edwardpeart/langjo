@@ -17,18 +17,20 @@ class VocabService:
         db: Session = SessionLocal()
         try:
             created = []
-            for word in words:
-                
-                payload = VocabCreate(**word, entry_id=entry_id)
-                created.append(self.repo.add_vocab(db, payload))
-            return created
-        finally:
-            db.close()
+            seen = set()
 
-    def get_vocab(self):
-        db: Session = SessionLocal()
-        try:
-            return self.repo.get_vocab(db)
+            for word in words:
+                key = (word.get("dict_form"), word.get("reading"))
+                if key in seen:
+                    continue
+                seen.add(key)
+
+                payload = VocabCreate(**word, entry_id=entry_id)
+                new_word = self.repo.add_vocab(db, payload)
+                if new_word:
+                    created.append(new_word)
+
+            return created
         finally:
             db.close()
 
