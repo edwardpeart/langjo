@@ -1,7 +1,9 @@
+from contextlib import asynccontextmanager
+
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from journal.api.routers import entries, vocab, stats
-from contextlib import asynccontextmanager
+
+from journal.api.routers import auth, entries, stats, vocab
 from .db.database import init_db
 
 @asynccontextmanager
@@ -9,7 +11,12 @@ async def lifespan(app: FastAPI):
     init_db()
     yield
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(
+    title="Langjo API",
+    summary="Journal, vocab, and stats API for language learning.",
+    version="0.1.0",
+    lifespan=lifespan,
+)
 
 app.add_middleware(
     CORSMiddleware,
@@ -24,6 +31,7 @@ app.add_middleware(
 def health_check():
     return {"stats": "ok"}
 
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
 app.include_router(entries.router, prefix="/entries", tags=["entries"])
 app.include_router(vocab.router, prefix="/vocab", tags=["vocab"])
 app.include_router(stats.router, prefix="/stats", tags=["stats"])

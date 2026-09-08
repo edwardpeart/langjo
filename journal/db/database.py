@@ -18,6 +18,7 @@ def get_db():
 
 
 def init_db():
+    from .models.user_model import User  # noqa: F401
     from .models.entry_model import Entry  # noqa: F401
     from .models.vocab_model import Vocab  # noqa: F401
 
