@@ -1,4 +1,8 @@
+from datetime import date
+
 from sqlalchemy.orm import Session
+
+from journal.db.schemas import StatsResponse
 
 from ..db.database import SessionLocal
 
@@ -41,4 +45,25 @@ class StatsService:
             return self.repo.get_vocab_count(db)
         finally:  
             db.close()
+
+    def get_new_words_today(self) -> int:
+        db: Session = SessionLocal()
+        try:
+            today = date.today()
+            return self.repo.get_new_vocab_count_by_date(db, today)
+        finally:
+            db.close()
+
+    def get_overview(self) -> StatsResponse:
+        db: Session = SessionLocal()
+        try:
+            return StatsResponse(
+                total_entries=self.get_entry_count(),
+                total_vocab=self.get_word_count(),
+                current_streak=self.get_streak(),
+                new_vocab_today=self.get_new_words_today(),
+            )
+        finally:
+            db.close()
+
     

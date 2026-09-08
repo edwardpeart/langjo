@@ -33,3 +33,9 @@ class VocabRead(VocabBase):
     entry_id: int | None = None
     created_at: datetime
     model_config = ConfigDict(from_attributes=True)
+
+class StatsResponse(BaseModel):
+    total_entries: int
+    total_vocab: int
+    current_streak: int
+    new_vocab_today: int

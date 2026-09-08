@@ -1,6 +1,6 @@
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from journal.api.routers import entries, vocab
+from journal.api.routers import entries, vocab, stats
 from contextlib import asynccontextmanager
 from .db.database import init_db
 
@@ -26,7 +26,5 @@ def health_check():
 
 app.include_router(entries.router, prefix="/entries", tags=["entries"])
 app.include_router(vocab.router, prefix="/vocab", tags=["vocab"])
-"""
-app.include_router(stats.router)
-"""
+app.include_router(stats.router, prefix="/stats", tags=["stats"])
 
