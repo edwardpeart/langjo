@@ -2,24 +2,28 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import DateTime, String, func
+from sqlalchemy import UUID, DateTime, ForeignKey, String, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from ..database import Base
 
 if TYPE_CHECKING:
+    from .user_model import User
     from .vocab_model import Vocab
-
 
 class Entry(Base):
     __tablename__ = "entries"
 
     id: Mapped[int] = mapped_column(primary_key=True)
+    user_id: Mapped[UUID] = mapped_column(ForeignKey("users.id"), nullable=False)
     body: Mapped[str] = mapped_column(String, nullable=False)
+
+    user: Mapped["User"] = relationship(back_populates="entries")
     vocab: Mapped[List["Vocab"]] = relationship(
         back_populates="entry",
         cascade="all, delete-orphan",
     )
+
     created_at: Mapped[DateTime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),
@@ -29,4 +33,3 @@ class Entry(Base):
         server_default=func.now(),
         onupdate=func.now(),
     )
-
