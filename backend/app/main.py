@@ -3,7 +3,8 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from journal.api.routers import auth, entries, stats, vocab
+from backend.app.api.routers import entries, stats, vocab
+from backend.app.api.routers import auth
 from .db.database import init_db
 
 @asynccontextmanager

@@ -5,10 +5,10 @@ from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from sqlalchemy.orm import Session
 
-from journal.config import config
-from journal.db.database import SessionLocal, get_db
-from journal.db.repositories.user_repo import UserRepository
-from journal.db.schemas import TokenData
+from backend.app.config import config
+from backend.app.db.database import SessionLocal, get_db
+from backend.app.db.repositories.user_repo import UserRepository
+from backend.app.db.schemas import TokenData
 
 security = HTTPBearer()
 

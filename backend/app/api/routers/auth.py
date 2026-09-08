@@ -1,10 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
 
-from journal.db.database import get_db
-from journal.db.schemas import Token, UserCreate, UserRead
-from journal.services.auth_service import get_current_user, login_user
-from journal.services.user_service import UserService
+from backend.app.db.database import get_db
+from backend.app.db.schemas import Token, UserCreate, UserRead
+from backend.app.services.auth_service import get_current_user, login_user
+from backend.app.services.user_service import UserService
 
 router = APIRouter()
 

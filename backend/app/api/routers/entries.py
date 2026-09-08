@@ -1,7 +1,7 @@
 from fastapi import HTTPException, status, APIRouter
-from journal.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate
-from journal.services.journal_service import JournalService
-from journal.services.parsing.japanese_parser import JapaneseParser
+from backend.app.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate
+from backend.app.services.journal_service import JournalService
+from backend.app.services.parsing.japanese_parser import JapaneseParser
 
 router = APIRouter()
 

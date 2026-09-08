@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status, APIRouter
-from journal.db.schemas import StatsResponse
-from journal.services.stats_service import StatsService
+from backend.app.db.schemas import StatsResponse
+from backend.app.services.stats_service import StatsService
 
 router = APIRouter()
 

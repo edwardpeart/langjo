@@ -1,4 +1,4 @@
-from journal.config import VOCAB_FILE
+from backend.app.config import VOCAB_FILE
 import json
 
 class VocabRepository:

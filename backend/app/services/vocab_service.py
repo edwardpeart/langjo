@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from journal.db.database import SessionLocal
+from backend.app.db.database import SessionLocal
 
 from ..db.repositories.vocab_repo import VocabRepository
 from ..db.schemas import VocabCreate

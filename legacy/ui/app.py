@@ -1,14 +1,14 @@
 from textual.app import App, ComposeResult
-from ..db.database import init_db
+from ...backend.app.db.database import init_db
 from textual.containers import Horizontal, Vertical
 from textual.widgets import Header, Footer, TabbedContent, TabPane, TextArea, Tree
 from .entry_tree import EntryTreePanel
 from .stats_panel import StatsPanel
 from .editor import Editor
 from .history import History
-from ..services.journal_service import JournalService
-from ..services.vocab_service import VocabService
-from ..services.stats_service import StatsService
+from ...backend.app.services.journal_service import JournalService
+from ...backend.app.services.vocab_service import VocabService
+from ...backend.app.services.stats_service import StatsService
 
 class LangjoApp(App):
     def __init__(self):

@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
-from journal.db.database import SessionLocal
-from journal.db.repositories.user_repo import UserRepository
-from journal.db.schemas import UserCreate
+from backend.app.db.database import SessionLocal
+from backend.app.db.repositories.user_repo import UserRepository
+from backend.app.db.schemas import UserCreate
 
 
 class UserService:

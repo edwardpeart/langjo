@@ -1,6 +1,6 @@
 from fastapi import HTTPException, status, APIRouter
-from journal.db.schemas import VocabCreate, VocabRead
-from journal.services.vocab_service import VocabService
+from backend.app.db.schemas import VocabCreate, VocabRead
+from backend.app.services.vocab_service import VocabService
 
 router = APIRouter()
 

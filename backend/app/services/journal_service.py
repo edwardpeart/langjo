@@ -3,8 +3,8 @@ from datetime import date
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 
-from journal.services.user_service import UserService
-from journal.services.vocab_service import VocabService
+from backend.app.services.user_service import UserService
+from backend.app.services.vocab_service import VocabService
 from ..db.schemas import EntryCreateResponse
 
 from ..db.database import SessionLocal

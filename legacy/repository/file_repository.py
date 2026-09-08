@@ -1,4 +1,4 @@
-from journal.config import ENTRIES_DIR
+from backend.app.config import ENTRIES_DIR
 from datetime import datetime, timedelta
 from pathlib import Path
 

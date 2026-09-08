@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from journal.db.models import entry_model
+from backend.app.db.models import entry_model
 
 from .. import schemas
 from ..models import vocab_model

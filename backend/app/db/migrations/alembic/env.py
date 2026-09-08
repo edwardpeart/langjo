@@ -3,9 +3,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from journal.config import config as app_config
-from journal.db.database import Base
-import journal.db.models  # noqa: F401
+from backend.app.config import config as app_config
+from backend.app.db.database import Base
+import backend.app.db.models  # noqa: F401
 
 config = context.config
 if app_config.DB_URL:

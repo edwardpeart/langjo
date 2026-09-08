@@ -2,7 +2,7 @@ from datetime import date
 
 from sqlalchemy.orm import Session
 
-from journal.db.schemas import StatsResponse
+from backend.app.db.schemas import StatsResponse
 
 from ..db.database import SessionLocal
 
