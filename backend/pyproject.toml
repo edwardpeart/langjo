@@ -1,20 +1,27 @@
 [project]
-name = "langjo"
+name = "langjo-backend"
 version = "0.1.0"
-description = "CLI journaling tool for language learning"
+description = "FastAPI backend for the Langjo journaling app"
+requires-python = ">=3.12"
 dependencies = [
-    "textual",
-    "sudachipy",
-    "sudachidict_core",
     "psycopg2-binary",
     "SQLAlchemy",
     "python-dotenv",
     "alembic",
     "fastapi[standard]",
+    "PyJWT",
+    "sudachipy",
+    "sudachidict_core",
 ]
 
 [project.scripts]
-langjo = "journal.ui.main:main"
+langjo-migrate = "backend.scripts.alembic_cli:migrate"
+langjo-upgrade = "backend.scripts.alembic_cli:upgrade"
+langjo-downgrade = "backend.scripts.alembic_cli:downgrade"
 
 [tool.setuptools]
-packages = ["journal", "journal.ui"]
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["backend*"]
