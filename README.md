@@ -94,28 +94,19 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-**Optional backend install**
-```sh
-cd langjo
-source .venv/bin/activate
-pip install -e ./backend
-```
-
 ## Run the API
 
-The API is now the primary runtime.
+```sh
+langjo-api
+```
+
+Or:
 
 ```sh
 cd langjo
 source .venv/bin/activate
 export PYTHONPATH=$PWD
 uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-You can also use the project script:
-
-```sh
-langjo-api
 ```
 
 Then open:
