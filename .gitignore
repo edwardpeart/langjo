@@ -1,7 +1,6 @@
 # Ignore all journal entries
 data/entries/*
 data/vocab/*
-tests/
 .github
 journal/db/migrations/alembic/versions/*
 
