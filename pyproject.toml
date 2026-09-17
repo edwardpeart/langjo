@@ -1,22 +1,23 @@
 [project]
-name = "langjo-backend"
+name = "langjo"
 version = "0.1.0"
-description = "FastAPI backend for the Langjo journaling app"
+description = "Langjo API and Textual journaling app"
 requires-python = ">=3.12"
 dependencies = [
+    "textual",
+    "sudachipy",
+    "sudachidict_core",
     "psycopg2-binary",
     "SQLAlchemy",
     "python-dotenv",
     "alembic",
     "fastapi[standard]",
     "PyJWT",
-    "sudachipy",
-    "sudachidict_core",
 ]
 
 [project.scripts]
 langjo-api = "backend.app.cli:main"
-langjo-tui = "frontend.tui_entry:main"
+langjo-tui = "frontend.textual_ui.main:main"
 langjo-migrate = "backend.scripts.alembic_cli:migrate"
 langjo-upgrade = "backend.scripts.alembic_cli:upgrade"
 langjo-downgrade = "backend.scripts.alembic_cli:downgrade"

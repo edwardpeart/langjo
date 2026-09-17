@@ -40,6 +40,13 @@ class VocabService:
         finally:
             db.close()
 
+    def get_vocab(self, user_id=None):
+        db: Session = SessionLocal()
+        try:
+            return self.repo.get_vocab(db, user_id=user_id)
+        finally:
+            db.close()
+
     def get_vocab_by_id(self, vocab_id: int, user_id=None):
         db: Session = SessionLocal()
         try:
