@@ -1,5 +1,5 @@
 from fastapi import HTTPException, status, APIRouter
-from backend.app.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate
+from backend.app.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate, EntryTreeResponse
 from backend.app.services.journal_service import JournalService
 from backend.app.services.parsing.japanese_parser import JapaneseParser
 
@@ -53,7 +53,7 @@ def create_entry(body: str):
 
 @router.put(
     "{entry_id}",
-    response_model=EntryUpdate,
+    response_model=EntryCreateResponse,
     status_code=status.HTTP_200_OK,
     summary="Update existing entry",)
 def update_entry(entry_id: int, body: str):
@@ -65,4 +65,45 @@ def update_entry(entry_id: int, body: str):
             detail=f"Entry cannot be empty",
         )
     return entry_update
+
+
+@router.get(
+    "tree",
+    response_model=EntryTreeResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Get entries as tree nodes",
+)
+def get_entry_tree():
+    service = JournalService()
+    entries = service.get_all_entries()
+    if not entries:
+        return EntryTreeResponse(__root__=[])
+
+    def to_title(body: str) -> str:
+        for line in (body or "").splitlines():
+            line = line.strip()
+            if line:
+                return line
+        return "Untitled"
+
+    def to_preview(body: str) -> str:
+        txt = (body or "").strip()
+        return txt[:200] + ("..." if len(txt) > 200 else "")
+
+    nodes = []
+    for e in entries:
+        nodes.append(
+            {
+                "id": e.id,
+                "title": to_title(e.body),
+                "preview": to_preview(e.body),
+                "slug": None,
+                "created_at": e.created_at,
+                "updated_at": e.updated_at,
+                "has_children": False,
+                "children": None,
+            }
+        )
+
+    return EntryTreeResponse(__root__=nodes)
     
