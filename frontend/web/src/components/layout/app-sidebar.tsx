@@ -47,7 +47,7 @@ const data = {
       ],
     ],
     [
-      "Year",
+      "components",
       ["ui", "button.tsx", "card.tsx"],
       "header.tsx",
       "footer.tsx",
