@@ -13,12 +13,6 @@ def _to_camel(s: str) -> str:
 
 
 class CamelModel(BaseModel):
-    """Base model that outputs camelCase aliases for JSON responses.
-
-    Use this as the base for API response/IO models so frontends receive
-    camelCase keys while Python code can keep snake_case attributes.
-    """
-
     model_config = ConfigDict(from_attributes=True, alias_generator=_to_camel, populate_by_name=True)
 
 
@@ -78,11 +72,25 @@ class UserRead(UserBase):
 class Token(CamelModel):
     access_token: str
     token_type: str = "bearer"
+    refresh_token: Optional[str] = None
 
 
 class TokenData(CamelModel):
     user_id: Optional[str] = None
     email: Optional[str] = None
+
+
+# Auth response including user + tokens for signup
+class AuthResponse(CamelModel):
+    user: UserRead
+    access_token: str
+    token_type: str = "bearer"
+    refresh_token: Optional[str] = None
+
+
+# Request model for refresh endpoint
+class RefreshRequest(CamelModel):
+    refresh_token: str
 
 
 # Response shapes

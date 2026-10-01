@@ -20,6 +20,14 @@ def create_access_token(subject: str, email: str) -> str:
     return jwt.encode(payload, config.SECRET_KEY, algorithm=config.ALGORITHM)
 
 
+def create_refresh_token(subject: str) -> str:
+    # simple refresh token implementation: longer expiry and signed token
+    expires_delta = timedelta(days=30)
+    exp = datetime.now(timezone.utc) + expires_delta
+    payload = {"sub": subject, "exp": exp}
+    return jwt.encode(payload, config.SECRET_KEY, algorithm=config.ALGORITHM)
+
+
 def decode_access_token(token: str):
     try:
         return jwt.decode(token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
@@ -66,6 +74,34 @@ def login_user(email: str, password: str):
                 detail="Incorrect email or password",
             )
         token = create_access_token(str(user.id), user.email)
-        return {"access_token": token, "token_type": "bearer"}
+        refresh = create_refresh_token(str(user.id))
+        return {"access_token": token, "token_type": "bearer", "refresh_token": refresh}
+    finally:
+        db.close()
+
+
+def refresh_access_token(refresh_token: str):
+    try:
+        payload = jwt.decode(refresh_token, config.SECRET_KEY, algorithms=[config.ALGORITHM])
+    except jwt.PyJWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token",
+        )
+
+    user_id = payload.get("sub")
+    if not user_id:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid refresh token",
+        )
+
+    db = SessionLocal()
+    try:
+        user = UserRepository().get_user_by_id(db, user_id)
+        if user is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="User not found")
+        access = create_access_token(str(user.id), user.email)
+        return {"access_token": access, "token_type": "bearer"}
     finally:
         db.close()

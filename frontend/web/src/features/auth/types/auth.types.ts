@@ -14,8 +14,9 @@ export type SignupRequest = {
 
 export type SignupResponse = {
   user: User
-  accesstoken: string
-  refreshtoken: string
+  accessToken: string
+  tokenType: string
+  refreshToken?: string
 }
 
 export type LoginRequest = {
@@ -25,8 +26,9 @@ export type LoginRequest = {
 
 export type LoginResponse = {
   user: User
-  accesstoken: string
-  refreshtoken: string
+  accessToken: string
+  tokenType: string
+  refreshToken?: string
 }
 
 export type AuthState = {

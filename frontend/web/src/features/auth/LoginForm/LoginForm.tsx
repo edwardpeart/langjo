@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-import React, { useState } from "react"
+import * as React from "react"
 import { useAuth } from "@/features/auth/hooks/useAuth"
 import type { LoginRequest } from "@/features/auth/types/auth.types"
 
@@ -25,7 +25,7 @@ export function LoginForm({
   ...props
 }: React.ComponentProps<"div">) {
   const { login, isLoading, error } = useAuth()
-  const [formData, setFormData] = useState<LoginRequest>({
+  const [formData, setFormData] = React.useState<LoginRequest>({
     email: "",
     password: "",
   })
@@ -96,11 +96,8 @@ export function LoginForm({
                 <Button type="submit" disabled={isLoading}>
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
-                <Button variant="outline" type="button">
-                  Login with Google
-                </Button>
                 <FieldDescription className="text-center">
-                  Don&apos;t have an account? <a href="#">Register</a>
+                  Don&apos;t have an account? <a href="/signup">Sign up</a>
                 </FieldDescription>
               </Field>
             </FieldGroup>

@@ -12,9 +12,10 @@ export const useAuth = () => {
     try {
       setLoading(true);
       const response = await authService.signup(data);
-      login(response);
-      localStorage.setItem('accessToken', response.accesstoken);
-      localStorage.setItem('refreshToken', response.refreshtoken);
+      localStorage.setItem('accessToken', response.accessToken);
+      localStorage.setItem('refreshToken', response.refreshToken ?? '');
+      const user = await authService.getCurrentUser();
+      login({ user, accessToken: response.accessToken, tokenType: response.tokenType });
       navigate('/dashboard');
     } catch (err) {
       console.error('Signup failed:', err);
@@ -27,9 +28,10 @@ export const useAuth = () => {
     try {
         setLoading(true);
         const response = await authService.login(credentials);
-        login(response);
-        localStorage.setItem('accessToken', response.accesstoken);
-        localStorage.setItem('refreshToken', response.refreshtoken);
+        localStorage.setItem('accessToken', response.accessToken);
+        localStorage.setItem('refreshToken', response.refreshToken ?? '');
+        const user = await authService.getCurrentUser();
+        login({ user, accessToken: response.accessToken, tokenType: response.tokenType });
         navigate('/dashboard');
     } catch (err) {
         console.error('Login failed:', err);

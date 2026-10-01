@@ -14,13 +14,13 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 
-import React, { useState } from "react"
+import * as React from "react"
 import { useAuth } from "@/features/auth/hooks/useAuth"
 import type { SignupRequest } from "@/features/auth/types/auth.types"
 
 export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
   const { signup } = useAuth()
-  const [formData, setFormData] = useState<SignupRequest>({
+  const [formData, setFormData] = React.useState<SignupRequest>({
     username: "",
     email: "",
     password: "",
@@ -51,11 +51,10 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <FieldGroup>
             <Field>
-              <FieldLabel htmlFor="name">Full Name</FieldLabel>
+              <FieldLabel htmlFor="name">Username</FieldLabel>
               <Input
                 id="name"
                 type="text"
-                placeholder="John Doe"
                 required
                 name="username"
                 value={formData.username}
@@ -102,9 +101,6 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
             <FieldGroup>
               <Field>
                 <Button type="submit">Create Account</Button>
-                <Button variant="outline" type="button">
-                  Sign up with Google
-                </Button>
                 <FieldDescription className="px-6 text-center">
                   Already have an account? <a href="/login">Sign in</a>
                 </FieldDescription>
