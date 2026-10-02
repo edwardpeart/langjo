@@ -1,4 +1,5 @@
-import { AppSidebar } from "@/components/layout/app-sidebar"
+import * as React from "react"
+import { AppSidebar } from "@/features/sidebar/components/sidebar"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -16,11 +17,19 @@ import {
 import { Button } from "@/components/ui/button"
 
 export default function Dashboard() {
+  const [crumbs, setCrumbs] = React.useState<
+    Array<{ id: number; title: string }>
+  >([])
+
   return (
     <SidebarProvider>
-      <AppSidebar />
+      <AppSidebar
+        onSelect={(path) =>
+          setCrumbs(path.map((p) => ({ id: p.id, title: p.title })))
+        }
+      />
       <SidebarInset>
-        <header className="jusify-between flex h-16 shrink-0 items-center border-b px-4">
+        <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
             <Separator
@@ -33,13 +42,21 @@ export default function Dashboard() {
                   <BreadcrumbLink href="#">Journal</BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className="hidden md:block" />
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Entry — 8 Aug 2026</BreadcrumbPage>
-                </BreadcrumbItem>
+                {crumbs.map((c, idx) => (
+                  <React.Fragment key={c.id}>
+                    {idx > 0 && (
+                      <BreadcrumbSeparator className="hidden md:block" />
+                    )}
+                    <BreadcrumbItem>
+                      <BreadcrumbPage>{c.title}</BreadcrumbPage>
+                    </BreadcrumbItem>
+                  </React.Fragment>
+                ))}
               </BreadcrumbList>
             </Breadcrumb>
           </div>
-          <div className="items-right flex gap-4">
+          <div className="items-right flex items-center gap-4">
+            <div className="text-sm font-semibold">LANGJO</div>
             <Separator
               orientation="vertical"
               className="hidden data-[orientation=vertical]:h-4 md:block"

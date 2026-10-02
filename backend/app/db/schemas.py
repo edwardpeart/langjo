@@ -98,6 +98,10 @@ class EntryCreateResponse(CamelModel):
     entry: EntryRead
     new_words_added: int
 
+class EntryReadResponse(CamelModel):
+    entry: EntryRead
+    vocab: List[VocabRead] = []
+
 
 class VocabReadResponse(CamelModel):
     id: int
@@ -125,4 +129,4 @@ class EntryNode(CamelModel):
 
 
 class EntryTreeResponse(CamelModel):
-    __root__: List[EntryNode]
+    tree: List[EntryNode]

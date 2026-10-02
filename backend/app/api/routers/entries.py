@@ -1,7 +1,8 @@
+from datetime import datetime
+
 from fastapi import HTTPException, status, APIRouter
-from backend.app.db.schemas import EntryRead, EntryCreateResponse, EntryUpdate, EntryTreeResponse
+from backend.app.db.schemas import EntryRead, EntryReadResponse, EntryCreateResponse, EntryTreeResponse
 from backend.app.services.journal_service import JournalService
-from backend.app.services.parsing.japanese_parser import JapaneseParser
 
 router = APIRouter()
 
@@ -22,7 +23,7 @@ def get_all_entries():
 
 @router.get(
         "{entry_id}",
-        response_model=EntryRead,
+        response_model=EntryReadResponse,
         status_code=status.HTTP_200_OK,
         summary="Get an entry by ID",)
 def get_entry(entry_id: int):
@@ -79,31 +80,64 @@ def get_entry_tree():
     if not entries:
         return EntryTreeResponse(__root__=[])
 
-    def to_title(body: str) -> str:
-        for line in (body or "").splitlines():
-            line = line.strip()
-            if line:
-                return line
-        return "Untitled"
+    def to_title(created_at: datetime) -> str:
+        return created_at.strftime("%d")
+        
 
     def to_preview(body: str) -> str:
         txt = (body or "").strip()
         return txt[:200] + ("..." if len(txt) > 200 else "")
 
-    nodes = []
+    # Group entries by year -> month
+    tree: dict[str, dict[str, list[dict]]] = {}
     for e in entries:
-        nodes.append(
+        year = e.created_at.strftime("%Y")
+        month = e.created_at.strftime("%B")
+        tree.setdefault(year, {}).setdefault(month, []).append(e)
+
+    root_nodes: list[dict] = []
+    for year, months in sorted(tree.items(), reverse=True):
+        month_nodes: list[dict] = []
+        for month, items in sorted(months.items(), reverse=True):
+            entry_nodes = [
+                {
+                    "id": it.id,
+                    "title": to_title(it.created_at),
+                    "preview": to_preview(it.body),
+                    "slug": None,
+                    "created_at": it.created_at,
+                    "updated_at": it.updated_at,
+                    "has_children": False,
+                    "children": None,
+                }
+                for it in sorted(items, key=lambda x: x.created_at, reverse=True)
+            ]
+
+            month_nodes.append(
+                {
+                    "id": hash(month) & 0xFFFFFFFF,
+                    "title": month,
+                    "preview": None,
+                    "slug": None,
+                    "created_at": None,
+                    "updated_at": None,
+                    "has_children": True,
+                    "children": entry_nodes,
+                }
+            )
+
+        root_nodes.append(
             {
-                "id": e.id,
-                "title": to_title(e.body),
-                "preview": to_preview(e.body),
+                "id": hash(year) & 0xFFFFFFFF,
+                "title": year,
+                "preview": None,
                 "slug": None,
-                "created_at": e.created_at,
-                "updated_at": e.updated_at,
-                "has_children": False,
-                "children": None,
+                "created_at": None,
+                "updated_at": None,
+                "has_children": True,
+                "children": month_nodes,
             }
         )
 
-    return EntryTreeResponse(__root__=nodes)
+    return EntryTreeResponse(__root__=root_nodes)
     
