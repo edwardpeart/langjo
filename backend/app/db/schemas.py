@@ -22,7 +22,7 @@ class EntryBase(CamelModel):
 
 
 class EntryCreate(EntryBase):
-    pass
+    user_id: str
 
 
 class EntryUpdate(CamelModel):

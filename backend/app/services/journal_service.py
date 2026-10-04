@@ -36,10 +36,10 @@ class JournalService:
         finally:
             db.close()
 
-    def get_entry(self, entry_id: int, user_id=None):
+    def get_entry(self, entry_id: int, user_id: int):
         db: Session = SessionLocal()
         try:
-            return self.entry_repo.get_entry(db, entry_id, user_id=user_id)
+            return self.entry_repo.get_entry(db, entry_id, user_id)
         finally:
             db.close()
 

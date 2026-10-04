@@ -26,7 +26,7 @@ class EntryRepository:
             db.refresh(entry)
         return entry
 
-    def get_entry(self, db: Session, entry_id: int, user_id=None):
+    def get_entry(self, db: Session, entry_id: int, user_id: int):
         query = db.query(entry_model.Entry).filter(entry_model.Entry.id == entry_id)
         if user_id is not None:
             query = query.filter(entry_model.Entry.user_id == user_id)

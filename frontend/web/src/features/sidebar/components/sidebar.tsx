@@ -1,5 +1,5 @@
 import * as React from "react"
-import { File, Folder, ChevronRight } from "lucide-react"
+import { BookOpenText, Book, ChevronRight } from "lucide-react"
 
 import {
   Sidebar,
@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/sidebar"
 
 import { useEntries } from "@/features/sidebar/hooks/useEntries"
-import mockEntries from "@/features/sidebar/mockData"
 import type { EntryNode } from "@/features/sidebar/types/entries.types"
 
 type Props = Omit<React.ComponentProps<typeof Sidebar>, "onSelect"> & {
@@ -25,7 +24,6 @@ type Props = Omit<React.ComponentProps<typeof Sidebar>, "onSelect"> & {
 
 export function AppSidebar({ onSelect, onEntrySelect, ...props }: Props) {
   const { tree, loading, error } = useEntries()
-  const entries = tree ?? mockEntries
 
   return (
     <Sidebar {...props}>
@@ -36,7 +34,7 @@ export function AppSidebar({ onSelect, onEntrySelect, ...props }: Props) {
             <SidebarMenu>
               {loading && <div className="p-4">Loading...</div>}
               {error && <div className="p-4 text-red-600">{error}</div>}
-              {entries.map((entry) => (
+              {tree?.map((entry) => (
                 <Tree
                   key={entry.id}
                   item={entry}
@@ -87,7 +85,7 @@ function Tree({
         className="data-[active=true]:bg-transparent"
         onClick={handleLeafClick}
       >
-        <File />
+        <BookOpenText />
         {item.title}
       </SidebarMenuButton>
     )
@@ -101,7 +99,7 @@ function Tree({
         <ChevronRight
           className={`transition-transform ${open ? "rotate-90" : ""}`}
         />
-        <Folder />
+        <Book />
         {item.title}
       </SidebarMenuButton>
 
