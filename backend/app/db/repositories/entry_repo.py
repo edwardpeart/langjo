@@ -5,8 +5,8 @@ from ..models import entry_model
 
 
 class EntryRepository:
-    def create_entry(self, db: Session, item: schemas.EntryCreate, user_id=None):
-        entry = entry_model.Entry(body=item.body, user_id=user_id)
+    def create_entry(self, db: Session, item: schemas.EntryCreate):
+        entry = entry_model.Entry(body=item.body, user_id=item.user_id)
         db.add(entry)
         db.commit()
         db.refresh(entry)
@@ -26,13 +26,13 @@ class EntryRepository:
             db.refresh(entry)
         return entry
 
-    def get_entry(self, db: Session, entry_id: int, user_id: int):
+    def get_entry(self, db: Session, entry_id: int, user_id: str):
         query = db.query(entry_model.Entry).filter(entry_model.Entry.id == entry_id)
         if user_id is not None:
             query = query.filter(entry_model.Entry.user_id == user_id)
         return query.first()
 
-    def get_entries_date_desc(self, db: Session, user_id=None):
+    def get_entries_date_desc(self, db: Session, user_id: str):
         query = db.query(entry_model.Entry).order_by(entry_model.Entry.created_at.desc())
         if user_id is not None:
             query = query.filter(entry_model.Entry.user_id == user_id)

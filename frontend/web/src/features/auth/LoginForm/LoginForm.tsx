@@ -30,6 +30,8 @@ export function LoginForm({
     password: "",
   })
 
+  const logoUrl = "/langjo.PNG"
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     setFormData((prevData) => ({
@@ -50,11 +52,20 @@ export function LoginForm({
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
-        <CardHeader>
-          <CardTitle>Login to your account</CardTitle>
-          <CardDescription>
-            Enter your email below to login to your account
-          </CardDescription>
+        <CardHeader className="space-y-4">
+          <div className="flex justify-center">
+            <img
+              src={logoUrl}
+              alt="Langjo Logo"
+              className="h-20 w-20 shrink-0"
+            />
+          </div>
+          <div className="text-left">
+            <CardTitle>Login to your account</CardTitle>
+            <CardDescription>
+              Enter your email below to login to your account
+            </CardDescription>
+          </div>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">

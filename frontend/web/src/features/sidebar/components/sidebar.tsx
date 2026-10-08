@@ -7,6 +7,7 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -16,18 +17,35 @@ import {
 
 import { useEntries } from "@/features/sidebar/hooks/useEntries"
 import type { EntryNode } from "@/features/sidebar/types/entries.types"
+import { Button } from "@/components/ui/button"
+
+const logoUrl = "/langjo.PNG"
 
 type Props = Omit<React.ComponentProps<typeof Sidebar>, "onSelect"> & {
   onSelect?: (path: EntryNode[]) => void
   onEntrySelect?: (entry: EntryNode, path: EntryNode[]) => void
+  onNewEntry?: () => void
 }
 
-export function AppSidebar({ onSelect, onEntrySelect, ...props }: Props) {
+export function AppSidebar({
+  onSelect,
+  onEntrySelect,
+  onNewEntry,
+  ...props
+}: Props) {
   const { tree, loading, error } = useEntries()
 
   return (
     <Sidebar {...props}>
-      <SidebarContent>
+      <SidebarHeader className="flex w-full items-center justify-between gap-3 px-3 py-2">
+        <img src={logoUrl} alt="Langjo Logo" className="h-20 w-20 shrink-0" />
+        <Button variant="secondary" className="border" onClick={onNewEntry}>
+          <BookOpenText className="mr-2 inline h-4 w-4" />
+          New Entry
+        </Button>
+      </SidebarHeader>
+
+      <SidebarContent className="flex-1">
         <SidebarGroup>
           <SidebarGroupLabel>Journal</SidebarGroupLabel>
           <SidebarGroupContent>

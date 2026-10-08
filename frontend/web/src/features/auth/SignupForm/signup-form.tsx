@@ -26,6 +26,8 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
     password: "",
   })
 
+  const logoUrl = "/langjo.PNG"
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     signup(formData)
@@ -41,11 +43,16 @@ export function SignupForm({ ...props }: React.ComponentProps<typeof Card>) {
 
   return (
     <Card {...props}>
-      <CardHeader>
-        <CardTitle>Create an account</CardTitle>
-        <CardDescription>
-          Enter your information below to create your account
-        </CardDescription>
+      <CardHeader className="space-y-4">
+        <div className="flex justify-center">
+          <img src={logoUrl} alt="Langjo Logo" className="h-20 w-20 shrink-0" />
+        </div>
+        <div className="text-left">
+          <CardTitle>Create an account</CardTitle>
+          <CardDescription>
+            Enter your information below to create your account
+          </CardDescription>
+        </div>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">

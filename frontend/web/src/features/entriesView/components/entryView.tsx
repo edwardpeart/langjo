@@ -12,12 +12,12 @@ interface Props {
 
 export function EntryView({ entryResponse, selectedId, onSelect }: Props) {
   return (
-    <div className="flex flex-col gap-3 p-4">
+    <div className="flex h-full flex-col gap-3 p-4">
       <Card
         key={entryResponse.entry.id}
         className={`cursor-pointer transition-colors hover:bg-muted/50 ${
           selectedId === entryResponse.entry.id
-            ? "border-primary bg-muted/50"
+            ? "flex h-full flex-col overflow-hidden border bg-muted/50"
             : ""
         }`}
         onClick={() => onSelect(entryResponse)}
@@ -40,7 +40,7 @@ export function EntryView({ entryResponse, selectedId, onSelect }: Props) {
             </Badge>
           </div>
         </CardHeader>
-        <CardContent className="px-4 pb-4">
+        <CardContent className="flex h-full flex-col overflow-hidden">
           <ScrollArea className="h-full">
             <p className="line-clamp-3 text-sm">{entryResponse.entry.body}</p>
           </ScrollArea>

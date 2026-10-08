@@ -20,6 +20,7 @@ import { entryService } from "@/features/entriesView/services/entriesService"
 import { mockEntries } from "@/features/entriesView/mockData"
 import type { EntryNode } from "@/features/sidebar/types/entries.types"
 import type { EntryReadResponse } from "@/features/entriesView/types/entries.types"
+import NewEntry from "@/features/newEntry/components/newEntry"
 
 const useMockSidebarData = import.meta.env.VITE_USE_MOCK_SIDEBAR === "true"
 
@@ -27,6 +28,7 @@ export default function Dashboard() {
   const [crumbs, setCrumbs] = React.useState<
     Array<{ id: number; title: string }>
   >([])
+
   const [selectedEntry, setSelectedEntry] =
     React.useState<EntryReadResponse | null>(null)
   const [selectedId, setSelectedId] = React.useState<number | undefined>(
@@ -35,8 +37,11 @@ export default function Dashboard() {
   const [entryError, setEntryError] = React.useState<string | null>(null)
   const [isLoadingEntry, setIsLoadingEntry] = React.useState(false)
 
+  const [newEntry, setNewEntry] = React.useState(true)
+
   const handleEntrySelect = React.useCallback(
     async (entry: EntryNode, path: EntryNode[]) => {
+      setNewEntry(false)
       setCrumbs(path.map((p) => ({ id: p.id, title: p.title })))
       setSelectedId(entry.id)
       setEntryError(null)
@@ -63,6 +68,15 @@ export default function Dashboard() {
     []
   )
 
+  const handleNewEntry = React.useCallback(() => {
+    setNewEntry(true)
+    setSelectedEntry(null)
+    setSelectedId(undefined)
+    setEntryError(null)
+    setIsLoadingEntry(false)
+    setCrumbs([])
+  }, [])
+
   return (
     <SidebarProvider>
       <AppSidebar
@@ -70,15 +84,12 @@ export default function Dashboard() {
           setCrumbs(path.map((p) => ({ id: p.id, title: p.title })))
         }
         onEntrySelect={handleEntrySelect}
+        onNewEntry={handleNewEntry}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
           <div className="flex items-center gap-2">
             <SidebarTrigger className="-ml-1" />
-            <Separator
-              orientation="vertical"
-              className="mr-2 data-[orientation=vertical]:h-4"
-            />
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className="hidden md:block">
@@ -99,11 +110,6 @@ export default function Dashboard() {
             </Breadcrumb>
           </div>
           <div className="items-right flex items-center gap-4">
-            <div className="text-sm font-semibold">LANGJO</div>
-            <Separator
-              orientation="vertical"
-              className="hidden data-[orientation=vertical]:h-4 md:block"
-            />
             <Button variant="ghost" size="sm">
               Sign out
             </Button>
@@ -122,18 +128,24 @@ export default function Dashboard() {
             </div>
           )}
 
-          {selectedEntry && (
+          {newEntry ? (
+            <NewEntry
+              onCancel={() => setNewEntry(false)}
+              onSaved={() => setNewEntry(false)}
+            />
+          ) : selectedEntry ? (
             <EntryView
               entryResponse={selectedEntry}
               selectedId={selectedId}
               onSelect={() => {}}
             />
-          )}
-
-          {!selectedEntry && !isLoadingEntry && !entryError && (
-            <div className="rounded-md border border-dashed bg-muted/20 p-8 text-center text-sm text-muted-foreground">
-              Select an entry from the journal tree to view it here.
-            </div>
+          ) : (
+            !isLoadingEntry &&
+            !entryError && (
+              <div className="rounded-md border border-dashed bg-muted/20 p-8 text-center text-sm text-muted-foreground">
+                Select an entry from the journal tree to view it here.
+              </div>
+            )
           )}
         </div>
       </SidebarInset>
