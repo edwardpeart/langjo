@@ -2,6 +2,7 @@ import * as React from "react"
 import { AppSidebar } from "@/features/sidebar/components/sidebar"
 import { EntryView } from "@/features/entriesView/components/entryView"
 import { AllVocabListView } from "@/features/vocabView/components/vocabView"
+import { StatsView } from "@/features/statsView/components/statsView"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -127,7 +128,7 @@ export default function Dashboard() {
             </Button>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex flex-1 flex-col gap-4 p-3">
           {isLoadingEntry && (
             <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground">
               Loading entry...
@@ -161,6 +162,9 @@ export default function Dashboard() {
               </div>
             )
           )}
+        </div>
+        <div className="flex flex-1 flex-col gap-4 p-4">
+          <StatsView />
         </div>
       </SidebarInset>
     </SidebarProvider>

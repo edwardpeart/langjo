@@ -74,7 +74,7 @@ export function NewEntry({ entry, entryId, onSaved, onCancel }: Props) {
             placeholder={
               savedBody ? "Add more to this entry..." : "Write today's entry..."
             }
-            className="h-full min-h-[260px] w-full resize-none border-none bg-transparent text-sm leading-relaxed shadow-none focus-visible:border-none focus-visible:ring-0 dark:bg-transparent"
+            className="h-full min-h-[65] w-full resize-none border-none bg-transparent text-sm leading-relaxed shadow-none focus-visible:border-none focus-visible:ring-0 dark:bg-transparent"
           />
         </CardContent>
 
