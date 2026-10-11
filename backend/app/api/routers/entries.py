@@ -1,7 +1,8 @@
 from datetime import datetime
 
-from fastapi import HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter
 from backend.app.db.schemas import EntryRead, EntryReadResponse, EntryCreateResponse, EntryTreeResponse
+from backend.app.services.auth_service import get_current_user
 from backend.app.services.journal_service import JournalService
 
 router = APIRouter()
@@ -11,9 +12,9 @@ router = APIRouter()
         response_model=list[EntryRead],
         status_code=status.HTTP_200_OK,
         summary="Get all entries",)
-def get_all_entries():
+def get_all_entries(current_user=Depends(get_current_user)):
     service = JournalService()
-    entries = service.get_all_entries()
+    entries = service.get_all_entries(user_id=current_user.id)
     if not entries:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -26,9 +27,9 @@ def get_all_entries():
         response_model=EntryReadResponse,
         status_code=status.HTTP_200_OK,
         summary="Get an entry by ID",)
-def get_entry(entry_id: int):
+def get_entry(entry_id: int, current_user=Depends(get_current_user)):
     service = JournalService()
-    entry = service.get_entry(entry_id)
+    entry = service.get_entry(entry_id, user_id=current_user.id)
     if not entry:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -42,7 +43,7 @@ def get_entry(entry_id: int):
     status_code=status.HTTP_200_OK,
     summary="Save new entry",
 )
-def create_entry(body: str):
+def create_entry(body: str, current_user=Depends(get_current_user)):
     if not body.strip():
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -50,16 +51,16 @@ def create_entry(body: str):
         )
 
     service = JournalService()
-    return service.save_entry(None, body)
+    return service.save_entry(None, body, user_id=current_user.id)
 
 @router.put(
     "{entry_id}",
     response_model=EntryCreateResponse,
     status_code=status.HTTP_200_OK,
     summary="Update existing entry",)
-def update_entry(entry_id: int, body: str):
+def update_entry(entry_id: int, body: str, current_user=Depends(get_current_user)):
     service = JournalService()
-    entry_update = service.save_entry(entry_id, body)
+    entry_update = service.save_entry(entry_id, body, user_id=current_user.id)
     if not body:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -74,9 +75,9 @@ def update_entry(entry_id: int, body: str):
     status_code=status.HTTP_200_OK,
     summary="Get entries as tree nodes",
 )
-def get_entry_tree():
+def get_entry_tree(current_user=Depends(get_current_user)):
     service = JournalService()
-    entries = service.get_all_entries()
+    entries = service.get_all_entries(user_id=current_user.id)
     if not entries:
         return EntryTreeResponse(__root__=[])
 

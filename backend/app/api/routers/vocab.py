@@ -1,5 +1,6 @@
-from fastapi import HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter
 from backend.app.db.schemas import VocabCreate, VocabRead
+from backend.app.services.auth_service import get_current_user
 from backend.app.services.vocab_service import VocabService
 
 router = APIRouter()
@@ -9,9 +10,9 @@ router = APIRouter()
     response_model=list[VocabRead],
     status_code=status.HTTP_200_OK,
     summary="Get all vocab",)
-def get_all_vocab():
+def get_all_vocab(current_user=Depends(get_current_user)):
     service = VocabService()
-    vocab = service.get_vocab()
+    vocab = service.get_vocab(user_id=current_user.id)
     if not vocab:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -24,9 +25,9 @@ def get_all_vocab():
     response_model=VocabRead,
     status_code=status.HTTP_200_OK,
     summary="Get vocab by ID",)
-def get_vocab(vocab_id: int):
+def get_vocab(vocab_id: int, current_user=Depends(get_current_user)):
     service = VocabService()
-    vocab = service.get_vocab_by_id(vocab_id)
+    vocab = service.get_vocab_by_id(vocab_id, user_id=current_user.id)
     if not vocab:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -39,9 +40,9 @@ def get_vocab(vocab_id: int):
     response_model=list[VocabRead],
     status_code=status.HTTP_200_OK,
     summary="Get vocab by entry ID",)
-def get_vocab_by_entry(entry_id: int):
+def get_vocab_by_entry(entry_id: int, current_user=Depends(get_current_user)):
     service = VocabService()
-    vocab = service.get_vocab_by_entry_id(entry_id)
+    vocab = service.get_vocab_by_entry_id(entry_id, user_id=current_user.id)
     if not vocab:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

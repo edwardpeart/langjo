@@ -1,5 +1,5 @@
 import { apiClient } from "@/services/api/apiClient"
-import type { EntryCreateRequest, EntryCreateResponse, EntryUpdateResponse } from '@/features/newEntry/types/entry.types'
+import type { EntryCreateResponse, EntryUpdateResponse } from '@/features/newEntry/types/entry.types'
 
 export const entryService = {
   async createEntry(text: string, entryId?: number): Promise<EntryCreateResponse | EntryUpdateResponse | null> {

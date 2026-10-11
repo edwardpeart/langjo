@@ -1,5 +1,6 @@
-from fastapi import HTTPException, status, APIRouter
+from fastapi import Depends, HTTPException, status, APIRouter
 from backend.app.db.schemas import StatsResponse
+from backend.app.services.auth_service import get_current_user
 from backend.app.services.stats_service import StatsService
 
 router = APIRouter()
@@ -9,6 +10,6 @@ router = APIRouter()
     response_model=StatsResponse,
     status_code=status.HTTP_200_OK,
     summary="Get stats overview",)
-def get_stats_overview():
+def get_stats_overview(current_user=Depends(get_current_user)):
     service = StatsService()
-    return service.get_overview()
+    return service.get_overview(user_id=current_user.id)

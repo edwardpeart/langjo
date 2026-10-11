@@ -1,5 +1,5 @@
 import * as React from "react"
-import { BookOpenText, Book, ChevronRight } from "lucide-react"
+import { BookOpenText, Book, ChevronRight, Pen } from "lucide-react"
 
 import {
   Sidebar,
@@ -25,12 +25,14 @@ type Props = Omit<React.ComponentProps<typeof Sidebar>, "onSelect"> & {
   onSelect?: (path: EntryNode[]) => void
   onEntrySelect?: (entry: EntryNode, path: EntryNode[]) => void
   onNewEntry?: () => void
+  onVocabSelect?: () => void
 }
 
 export function AppSidebar({
   onSelect,
   onEntrySelect,
   onNewEntry,
+  onVocabSelect,
   ...props
 }: Props) {
   const { tree, loading, error } = useEntries()
@@ -40,7 +42,7 @@ export function AppSidebar({
       <SidebarHeader className="flex w-full items-center justify-between gap-3 px-3 py-2">
         <img src={logoUrl} alt="Langjo Logo" className="h-20 w-20 shrink-0" />
         <Button variant="secondary" className="border" onClick={onNewEntry}>
-          <BookOpenText className="mr-2 inline h-4 w-4" />
+          <Pen className="mr-2 inline h-4 w-4" />
           New Entry
         </Button>
       </SidebarHeader>
@@ -71,6 +73,12 @@ export function AppSidebar({
             <SidebarMenu>
               {loading && <div className="p-4">Loading...</div>}
               {error && <div className="p-4 text-red-600">{error}</div>}
+              <SidebarMenuItem>
+                <SidebarMenuButton onClick={onVocabSelect}>
+                  <BookOpenText className="mr-2 h-4 w-4" />
+                  View all
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

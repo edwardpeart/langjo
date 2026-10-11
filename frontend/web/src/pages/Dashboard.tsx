@@ -1,6 +1,7 @@
 import * as React from "react"
 import { AppSidebar } from "@/features/sidebar/components/sidebar"
 import { EntryView } from "@/features/entriesView/components/entryView"
+import { AllVocabListView } from "@/features/vocabView/components/vocabView"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -9,7 +10,6 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Separator } from "@/components/ui/separator"
 import {
   SidebarInset,
   SidebarProvider,
@@ -37,11 +37,13 @@ export default function Dashboard() {
   const [entryError, setEntryError] = React.useState<string | null>(null)
   const [isLoadingEntry, setIsLoadingEntry] = React.useState(false)
 
-  const [newEntry, setNewEntry] = React.useState(true)
+  type ViewMode = "new-entry" | "entry" | "vocab"
+
+  const [viewMode, setViewMode] = React.useState<ViewMode>("new-entry")
 
   const handleEntrySelect = React.useCallback(
     async (entry: EntryNode, path: EntryNode[]) => {
-      setNewEntry(false)
+      setViewMode("entry")
       setCrumbs(path.map((p) => ({ id: p.id, title: p.title })))
       setSelectedId(entry.id)
       setEntryError(null)
@@ -69,7 +71,16 @@ export default function Dashboard() {
   )
 
   const handleNewEntry = React.useCallback(() => {
-    setNewEntry(true)
+    setViewMode("new-entry")
+    setSelectedEntry(null)
+    setSelectedId(undefined)
+    setEntryError(null)
+    setIsLoadingEntry(false)
+    setCrumbs([])
+  }, [])
+
+  const handleVocabSelect = React.useCallback(() => {
+    setViewMode("vocab")
     setSelectedEntry(null)
     setSelectedId(undefined)
     setEntryError(null)
@@ -85,6 +96,7 @@ export default function Dashboard() {
         }
         onEntrySelect={handleEntrySelect}
         onNewEntry={handleNewEntry}
+        onVocabSelect={handleVocabSelect}
       />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center justify-between border-b px-4">
@@ -128,11 +140,13 @@ export default function Dashboard() {
             </div>
           )}
 
-          {newEntry ? (
+          {viewMode === "new-entry" ? (
             <NewEntry
-              onCancel={() => setNewEntry(false)}
-              onSaved={() => setNewEntry(false)}
+              onCancel={() => setViewMode("entry")}
+              onSaved={() => setViewMode("entry")}
             />
+          ) : viewMode === "vocab" ? (
+            <AllVocabListView />
           ) : selectedEntry ? (
             <EntryView
               entryResponse={selectedEntry}
