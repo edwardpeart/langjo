@@ -1,63 +1,134 @@
 # Langjo
 
-![Python](https://img.shields.io/badge/python-3.10+-blue)
-![Textual](https://img.shields.io/badge/UI-Textual-purple)
+![Python](https://img.shields.io/badge/python-3.12+-blue)
+![React](https://img.shields.io/badge/React-19-61dafb)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178c6)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
 ## Table of Contents
 
+- [Overview](#overview)
 - [File Structure](#file-structure)
 - [Tech Stack](#tech-stack)
 - [Features](#features)
-- [Intro](#intro)
+- [Web App](#web-app)
 - [Installation](#installation)
-- [Run the API](#run-the-api)
-- [API Examples](#api-examples)
+- [Run the app](#run-the-app)
+- [API examples](#api-examples)
 - [Textual UI](#textual-ui)
-- [User Prerequisites](#user-prerequisites)
-- [Usage](#usage)
-- [Database Migrations](#database-migrations)
+- [Database migrations](#database-migrations)
 - [Roadmap](#roadmap)
+
+## Overview
+
+Langjo is a language-learning journaling app built around a simple idea: write daily, review naturally, and turn your journal entries into useful progress data. It combines a FastAPI backend amd a React/Vite dashboard so you can journal, track vocabulary, and monitor streaks in a few different ways.
+
+Often the barrier to writing journals when learning a language is the writing system itself. [Japanese](https://en.wikipedia.org/wiki/Japanese_writing_system), for example, uses two syllabaries and tens of thousands of individual logographic characters. Langjo lowers this barrier and makes building a daily journaling habit attainable for learners. At the same time, it analyzes each entry to generate useful data such as vocabulary growth and writing streaks, turning daily practice into trackable progress.
 
 ## File Structure
 
 ```text
 langjo/
+|
 ├── backend/
 │   ├── app/
 │   │   ├── api/
 │   │   │   └── routers/
+│   │   │       ├── auth.py
+│   │   │       ├── entries.py
+│   │   │       ├── stats.py
+│   │   │       └── vocab.py
 │   │   ├── db/
 │   │   │   ├── migrations/
+│   │   │   │   └── alembic/
 │   │   │   ├── models/
+│   │   │   │   ├── entry_model.py
+│   │   │   │   ├── user_model.py
+│   │   │   │   └── vocab_model.py
 │   │   │   ├── repositories/
+│   │   │   │   ├── entry_repo.py
+│   │   │   │   ├── stats_repo.py
+│   │   │   │   ├── user_repo.py
+│   │   │   │   └── vocab_repo.py
+│   │   │   ├── database.py
 │   │   │   └── schemas.py
 │   │   ├── services/
-│   │   ├── config.py
+│   │   │   ├── auth_service.py
+│   │   │   ├── journal_service.py
+│   │   │   ├── stats_service.py
+│   │   │   ├── user_service.py
+│   │   │   ├── vocab_service.py
+│   │   │   └── parsing/
+│   │   │       ├── base_parser.py
+│   │   │       └── japanese_parser.py
 │   │   ├── cli.py
+│   │   ├── config.py
 │   │   └── main.py
+│   ├── scripts/
+│   │   └── alembic_cli.py
 │   └── pyproject.toml
+|
 ├── frontend/
-│   └── textual_ui/
-├── assets/
-├── alembic.ini
+│   ├── textual_ui/
+│   │   ├── app.py
+│   │   ├── editor.py
+│   │   ├── entry_tree.py
+│   │   ├── history.py
+│   │   ├── main.py
+│   │   ├── stats_panel.py
+│   │   └── styles/
+│   └── web/
+│       ├── src/
+│       │   ├── assets/
+│       │   ├── components/
+│       │   ├── constants/
+│       │   ├── features/
+│       │   │   ├── auth/
+│       │   │   ├── entriesView/
+│       │   │   ├── newEntry/
+│       │   │   ├── sidebar/
+│       │   │   ├── statsView/
+│       │   │   └── vocabView/
+│       │   ├── hooks/
+│       │   ├── lib/
+│       │   ├── middleware/
+│       │   ├── pages/
+│       │   ├── services/
+│       │   ├── store/
+│       │   ├── types/
+│       │   ├── App.tsx
+│       │   ├── index.css
+│       │   └── main.tsx
+│       ├── package.json
+│       ├── tsconfig.json
+│       ├── vite.config.ts
+│       └── index.html
+├── tests/
 ├── .env
-├── README.md
-├── example.README.md
+├── .gitignore
+├── alembic.ini
+├── example.env
+├── LICENSE.txt
 ├── pyproject.toml
-└── tests/
+├── README.md
+├── test.sh
+└── uv.lock
 ```
 
 ## Tech Stack
 
+- Python 3.12+
 - FastAPI
 - SQLAlchemy
 - PostgreSQL
 - Alembic
 - JWT auth
-- Python 3.12+
-- Textual for the optional terminal client
 - Sudachi for Japanese parsing
+- React
+- Vite
+- TypeScript
+- Tailwind CSS
+- Textual (terminal UI)
 
 ## Features
 
@@ -65,27 +136,34 @@ langjo/
 - **Daily Journaling:** Write and save entries as journal content stored in the database.
 - **Multiple Daily Entries:** Users can create and maintain multiple journal entries with timestamps.
 - **Vocab Tracking:** Journal entries are parsed and normalized into dictionary form with [Sudachipy](https://pypi.org/project/SudachiPy/0.4.3/), and new vocabulary is saved per user.
-- **History Browser:** Previous entries can be retrieved and reviewed through the API or the optional Textual client.
+- **Entry File Tree:** Previous entries can be retrieved and reviewed through the API or the optional Textual client.
 - **Streak Tracking:** Daily entry streaks are calculated against each user’s local time.
 - **Live stats:** View total vocabulary, entry count, and streak through the API and stats endpoints.
 
-## Intro
+## Web App
 
+### Login
 
-Often the barrier to writing journals when learning a language is the writing system itself. [Japanese](https://en.wikipedia.org/wiki/Japanese_writing_system), for example, uses two syllabaries and tens of thousands of individual logographic characters. Langjo lowers this barrier and makes building a daily journaling habit attainable for learners. At the same time, it analyzes each entry to generate useful data such as vocabulary growth and writing streaks, turning daily practice into trackable progress.
+![Login](assets/login.png)
 
-#### Supported Journaling languages
-- Japanese
-- TBD...
+### Signup
 
-### Why Journaling?
-Journaling is a powerful language learning tool that offers a low-stakes environment to experiment with new vocabulary and grammar structures whilst strengthening neural pathways as the entries are often personally relevant.
+![Singup](assets/signup.png)
 
+### Entry view
 
+![Entry view](assets/entryView.png)
+
+### New entry
+
+![New entry](assets/newEntry.png)
+
+### Vocabulary view
+
+![Vocabulary view](assets/vocabView.png)
 
 ## Installation
 
-**Install**
 ```sh
 git clone https://github.com/edwardpeart/langjo
 cd langjo
@@ -94,13 +172,16 @@ source .venv/bin/activate
 pip install -e .
 ```
 
-## Run the API
+For the web frontend:
 
 ```sh
-langjo-api
+cd frontend/web
+npm install
 ```
 
-Or:
+## Run the app
+
+### API
 
 ```sh
 cd langjo
@@ -110,17 +191,39 @@ uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --reload
 ```
 
 Then open:
+
 - http://localhost:8000/docs
 - http://localhost:8000/health
 
-## API Examples
+### Web dashboard
+
+```sh
+cd langjo/frontend/web
+npm run dev
+```
+
+Then open:
+
+- http://localhost:5173
+
+### Textual UI
+
+```sh
+cd langjo
+source .venv/bin/activate
+langjo-tui
+```
+
+## API examples
 
 ### Health check
+
 ```sh
 curl http://localhost:8000/health
 ```
 
 ### Sign up
+
 ```sh
 curl -X POST http://localhost:8000/auth/signup \
   -H "Content-Type: application/json" \
@@ -132,6 +235,7 @@ curl -X POST http://localhost:8000/auth/signup \
 ```
 
 ### Log in
+
 ```sh
 curl -X POST "http://localhost:8000/auth/login" \
   -H "Content-Type: application/x-www-form-urlencoded" \
@@ -139,24 +243,28 @@ curl -X POST "http://localhost:8000/auth/login" \
 ```
 
 ### Get current user
+
 ```sh
 curl -X GET http://localhost:8000/auth/me \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ### View entries
+
 ```sh
 curl -X GET http://localhost:8000/entries \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ### View vocab
+
 ```sh
 curl -X GET http://localhost:8000/vocab \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
 ```
 
 ### View stats
+
 ```sh
 curl -X GET http://localhost:8000/stats \
   -H "Authorization: Bearer YOUR_TOKEN_HERE"
@@ -164,51 +272,45 @@ curl -X GET http://localhost:8000/stats \
 
 ## Textual UI
 
-A terminal-based journaling tool for language learning built with [Textual](https://textual.textualize.io/)
+A terminal-first journaling client for quick local use, built with [Textual](https://textual.textualize.io/).
 
 <p align="center">
   <img src="assets/langjo_demo.gif" width="900">
 </p>
 
+### User prerequisites
 
-### User Prerequisites
+#### Japanese input setup
 
-#### Japanese Input Setup
-
-To write journal entries in Japanese you will need a Japanese input method.
+To write journal entries in Japanese, install a Japanese input method.
 
 **Linux:**
-  Install ibus-mozc or fcitx-mozc
+
+- Install `ibus-mozc` or `fcitx-mozc`
 
 **Mac:**
-  System Settings → Keyboard → Input Sources → Japanese
+
+- System Settings → Keyboard → Input Sources → Japanese
 
 **Windows:**
-  Settings → Time & Language → Japanese Keyboard
 
-#### Japanese Font
+- Settings → Time & Language → Japanese Keyboard
 
-You will also want to make sure your [Font](https://learnjapanese.moe/font/) displays the Japanese version of Kanji characters.
+#### Japanese font
 
-### Usage
+You will also want a font that supports Japanese characters well, such as a Kanji-friendly system font.
 
-The Textual app remains available as a local terminal client while the web frontend is being built.
+### Textual controls
 
-```sh
-cd langjo
-source .venv/bin/activate
-langjo-tui
-```
-
-| Key | Action |
-|----|----|
+| Key          | Action                      |
+| ------------ | --------------------------- |
 | **Ctrl + S** | Save entry and update stats |
-| **Tab** | Switch between UI areas |
-| **↑ / ↓** | Navigate file tree |
-| **Enter** | Select folder/file |
-| **Ctrl + Q** | Quit Langjo |
+| **Tab**      | Switch between UI areas     |
+| **↑ / ↓**    | Navigate the file tree      |
+| **Enter**    | Select folder or file       |
+| **Ctrl + Q** | Quit Langjo                 |
 
-## Database Migrations
+## Database migrations
 
 ```sh
 cd langjo
@@ -227,8 +329,9 @@ langjo-downgrade
 ```
 
 ## Roadmap
+
 - [ ] User timezones for streak accuracy
-- [ ] Package/dockerize tool
-- [ ] Build the web frontend on top of the API
-- [ ] Deploy the API for demo and usage
-- [ ] Multi-language support
+- [ ] Package and dockerize the app
+- [ ] Improve the web dashboard polish and onboarding flow
+- [ ] Deploy the API for demo use
+- [ ] Expand multi-language support
