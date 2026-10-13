@@ -128,43 +128,50 @@ export default function Dashboard() {
             </Button>
           </div>
         </header>
-        <div className="flex flex-1 flex-col gap-4 p-3">
-          {isLoadingEntry && (
-            <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground">
-              Loading entry...
-            </div>
-          )}
-
-          {entryError && (
-            <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-              {entryError}
-            </div>
-          )}
-
-          {viewMode === "new-entry" ? (
-            <NewEntry
-              onCancel={() => setViewMode("entry")}
-              onSaved={() => setViewMode("entry")}
-            />
-          ) : viewMode === "vocab" ? (
-            <AllVocabListView />
-          ) : selectedEntry ? (
-            <EntryView
-              entryResponse={selectedEntry}
-              selectedId={selectedId}
-              onSelect={() => {}}
-            />
-          ) : (
-            !isLoadingEntry &&
-            !entryError && (
-              <div className="rounded-md border border-dashed bg-muted/20 p-8 text-center text-sm text-muted-foreground">
-                Select an entry from the journal tree to view it here.
-              </div>
-            )
-          )}
-        </div>
-        <div className="flex flex-1 flex-col gap-4 p-4">
+        <div className="flex min-h-0 w-full flex-1 flex-col gap-4 p-4">
           <StatsView />
+
+          <div className="flex min-h-0 w-full flex-1 flex-col">
+            {isLoadingEntry && (
+              <div className="rounded-md border bg-muted/30 p-4 text-sm text-muted-foreground">
+                Loading entry...
+              </div>
+            )}
+
+            {entryError && (
+              <div className="rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                {entryError}
+              </div>
+            )}
+
+            {viewMode === "new-entry" ? (
+              <div className="flex min-h-0 w-full flex-1">
+                <NewEntry
+                  onCancel={() => setViewMode("entry")}
+                  onSaved={() => setViewMode("entry")}
+                />
+              </div>
+            ) : viewMode === "vocab" ? (
+              <div className="flex min-h-0 w-full flex-1">
+                <AllVocabListView />
+              </div>
+            ) : selectedEntry ? (
+              <div className="flex min-h-0 w-full flex-1">
+                <EntryView
+                  entryResponse={selectedEntry}
+                  selectedId={selectedId}
+                  onSelect={() => {}}
+                />
+              </div>
+            ) : (
+              !isLoadingEntry &&
+              !entryError && (
+                <div className="flex min-h-0 w-full flex-1 items-center justify-center rounded-md border border-dashed bg-muted/20 p-8 text-center text-sm text-muted-foreground">
+                  Select an entry from the journal tree to view it here.
+                </div>
+              )
+            )}
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>

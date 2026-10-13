@@ -13,12 +13,12 @@ interface Props {
 
 export function VocabView({ vocab, selectedId, onSelect }: Props) {
   return (
-    <div className="flex h-full flex-col gap-3 p-4">
+    <div className="flex h-full w-full flex-col gap-3 p-4">
       <Card
         key={vocab.id}
         className={`cursor-pointer transition-colors hover:bg-muted/50 ${
           selectedId === vocab.id
-            ? "flex h-full flex-col overflow-hidden border bg-muted/50"
+            ? "flex h-full w-full flex-col overflow-hidden border bg-muted/50"
             : ""
         }`}
         onClick={() => onSelect(vocab)}
@@ -82,7 +82,7 @@ export function AllVocabListView() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-3 rounded-md border bg-background p-4">
+    <div className="flex h-full w-full flex-col gap-3 rounded-md border bg-background p-4">
       <div className="mb-2 flex items-center justify-between">
         <h2 className="text-lg font-semibold">All vocabulary</h2>
         <Badge variant="secondary">{vocab.length} items</Badge>
